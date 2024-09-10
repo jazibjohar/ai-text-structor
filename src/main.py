@@ -14,14 +14,14 @@ def process(request):
     model = request_json.get('model')
     if model not in models:
         return {"error": "Invalid model"}, 400
-    # content = request_json.get('content')
+    content = request_json.get('content')
     
     prompt_config = load_json('example_model.json')
     DynamicModel = build_pydantic_model(prompt_config["attributes"])
     parser = JsonOutputParser(pydantic_object=DynamicModel)
     return run_completion(
-        models[request_json.get('model')],
+        models[model],
         parser,
-        request_json.get('content'),
+        content,
         prompt_config["invocation_prompt"]
     )
