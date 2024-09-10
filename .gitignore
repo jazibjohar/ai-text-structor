@@ -1,0 +1,10 @@
+.venv
+__pycache__
+
+.envrc.local
+basic-summary-engine.zip
+src/requirements.txt
+
+.DS_Store
+.terraform
+.terraform.lock.hcl

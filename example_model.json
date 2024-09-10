@@ -1,0 +1,23 @@
+{
+    "invocation_prompt": "Summarize the conversation for a Project Manager. Include the main points and action items.",
+    "attributes": {
+        "title": "Title of the meeting",
+        "introduction": "Introduction of the meeting",
+        "summary": "A 100 words summary of the meeting",
+        "attendees": [
+            {
+                "name": "Name of the attendee",
+                "role": "Organizational Role of the attendee"
+            }
+        ],
+        "action_items": [
+            {
+                "id": "Numeric action item ID",
+                "description": "Description of the action item",
+                "action_owner": "(Optional) Name or role od Action owner",
+                "target_date": "(Optional) Target date for completion",
+                "dependency_id": "(Optional) ID of the action item that this item is dependent on"
+            }
+        ]
+    }
+}

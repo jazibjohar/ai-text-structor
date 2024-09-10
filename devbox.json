@@ -1,0 +1,22 @@
+{
+  "$schema":  "https://raw.githubusercontent.com/jetify-com/devbox/0.12.0/.schema/devbox.schema.json",
+  "packages": ["python@latest"],
+  "shell": {
+    "init_hook": [
+      "echo 'Welcome to devbox!' > /dev/null",
+      ". $VENV_DIR/bin/activate"
+    ],
+    "scripts": {
+      "test": [
+        "python src/test_main.py"
+      ],
+      "pip-dump": [
+        "pip freeze > requirements.txt"
+      ],
+      "package-build": [
+        "cp requirements.txt src",
+        "cd src && zip -r ../package/build.zip . -x *.pyc '*__pycache__*' test_* .DS_Store"
+      ],
+    }
+  }
+}
