@@ -5,6 +5,10 @@
         "sentiments": {
             "prompt": "what is the sentiment of the meeting? answer in one word",
             "type": "string"
+        },
+        "likely-hood-of-accepting": {
+            "prompt": "On the scale of 1 to 10, how likely is the person to accept the offer?",
+            "type": "numeric"
         }
     },
     "stand-up": {
