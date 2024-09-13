@@ -1,0 +1,4 @@
+{
+    "prompt": "what is the sentiment of the meeting? answer in one word",
+    "type": "string"
+}

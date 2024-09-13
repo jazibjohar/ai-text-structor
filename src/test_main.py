@@ -185,9 +185,19 @@ Meeting ended after 00:25:12 👋
 
 WORD_COUNT = 1000
 
-sample_request = Request({
-    'model': 'gpt-4o',
-    'content': CONTENT,
-    'word_count': WORD_COUNT
-})
-print(json.dumps(process(sample_request), indent=2))
+
+file_paths = [
+    # 'example_1.json',
+    # 'example_2.json',
+    # 'example_3.json',
+    # 'example_4.json',
+    'example_5.json',
+]
+for file_path in file_paths:
+    sample_request = Request({
+        'model': 'gpt-4o',
+        'content': CONTENT,
+        'word_count': WORD_COUNT,
+        "file_path": file_path
+    })
+    print(json.dumps(process(sample_request), indent=2))

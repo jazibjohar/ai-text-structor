@@ -1,7 +1,6 @@
 
 from models import get_open_ai_model, get_google_generative_ai_model, get_mistral
-from build_model import build_pydantic_model,load_json
-from langchain_core.output_parsers import JsonOutputParser
+from engine_config import load_json
 from completion import run_completion
 
 models = {
@@ -15,13 +14,11 @@ def process(request):
     if model not in models:
         return {"error": "Invalid model"}, 400
     content = request_json.get('content')
+    file_path = request_json.get('file_path')
     
-    prompt_config = load_json('example_model.json')
-    DynamicModel = build_pydantic_model(prompt_config["attributes"])
-    parser = JsonOutputParser(pydantic_object=DynamicModel)
+    prompt_config = load_json(file_path)
     return run_completion(
         models[model],
-        parser,
         content,
-        prompt_config["invocation_prompt"]
+        prompt_config
     )

@@ -1,25 +1,21 @@
-import json
-from langchain_core.prompts import ChatPromptTemplate
+from prompt_engine import prompt_builder_by_type
+from process_intent import get_builder_for_intent
 
-extraction_prompt = """Be sure to return a valid json NOT encapsulated in markdown.  Never use the invalid escape sequence \'
 
-Formatting Instructions: {format_instructions}"""
-
-def run_completion(model, parser, content, invocation_prompt):
-    string_prompt = ChatPromptTemplate.from_messages([
-        ("system", content),
-        ("user", "{input}")
-    ])
-    string_chain = string_prompt | model
-    string_output = string_chain.invoke({"input": invocation_prompt})
+def run_completion(model, content, engine_object):
+    prompt_type = engine_object.get("type")
+    if prompt_type is None:
+        return get_builder_for_intent(model, content, engine_object)
     
-    parse_prompt = ChatPromptTemplate.from_messages([
-        ("system", extraction_prompt),
-        ("user", "{phrase}")
-    ])
-    parse_chain = parse_prompt | model
-    parsed_output = parse_chain.invoke({
-        "phrase": string_output,
-        "format_instructions": parser.get_format_instructions(),
-    })
-    return json.loads(parsed_output.content)
+    if prompt_type not in prompt_builder_by_type:
+        raise ValueError(f"Prompt builder {type} invalid")
+
+    get_prompt = prompt_builder_by_type[prompt_type]
+    builder = get_prompt(content, engine_object)
+    prompts = builder.get("prompts")
+    args = builder.get("args")
+    parser = builder.get("parser")
+    if prompts is None or parser is None:
+        raise ValueError("Invalid prompts or parser")
+    chain =  prompts | model | parser
+    return chain.invoke(args)

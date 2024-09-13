@@ -1,0 +1,10 @@
+{
+    "interview-meeting": {
+        "prompt": "what is the sentiment of the meeting?",
+        "type": "string"
+    },
+    "participants": {
+        "prompt": "Name all the participants of the meeting",
+        "type": "string"
+    }
+}

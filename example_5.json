@@ -1,0 +1,16 @@
+{
+    "interview-meeting": {
+        "prompt": "what is the sentiment of the meeting?",
+        "type": "string"
+    },
+    "interview-metadata": {
+        "participants": {
+            "prompt": "Name all the participants of the meeting",
+            "type": "string"
+        },
+        "duration": {
+            "prompt": "Estimate the duration of the meeting in minutes",
+            "type": "numeric"
+        }
+    }
+}
