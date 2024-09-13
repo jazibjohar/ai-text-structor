@@ -1,0 +1,25 @@
+{
+    "prompt": "Analyze the meeting and suggest what category it falls under",
+    "interview-meeting": {
+        "explanation": "Meeting someone new and talking about their work",
+        "sentiments": {
+            "prompt": "what is the sentiment of the meeting? answer in one word",
+            "type": "string"
+        }
+    },
+    "stand-up": {
+        "explanation": "Everyday meeting discussion what to work on today, what was done yesterday and any blockers",
+        "blockers": {
+            "prompt": "Are there any blockers?",
+            "type": "string"
+        }
+    },
+    "participants": {
+        "prompt": "Name all the participants of the meeting",
+        "type": "string"
+    },
+    "duration": {
+        "prompt": "Estimate the duration of the meeting in minutes",
+        "type": "numeric"
+    }
+}
