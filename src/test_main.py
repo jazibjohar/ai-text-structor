@@ -196,7 +196,7 @@ file_paths = [
 ]
 for file_path in file_paths:
     sample_request = Request({
-        'model': 'gpt-4o',
+        'model': 'gemini-1.5-pro',
         'content': CONTENT,
         'word_count': WORD_COUNT,
         "file_path": file_path

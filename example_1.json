@@ -19,6 +19,7 @@
                 "target_date": "(Optional) Target date for completion",
                 "dependency_id": "(Optional) ID of the action item that this item is dependent on"
             }
-        ]
+        ],
+        "next_steps": "Next steps after the meeting"
     }
 }

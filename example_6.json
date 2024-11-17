@@ -1,7 +1,7 @@
 {
     "prompt": "Analyze the meeting and suggest what category it falls under",
     "interview-meeting": {
-        "explanation": "Meeting someone new and talking about their work",
+        "explanation": "Everyday meeting discussion what to work on today, what was done yesterday and any blockers",
         "sentiments": {
             "prompt": "what is the sentiment of the meeting? answer in one word",
             "type": "string"
@@ -9,10 +9,27 @@
         "likely-hood-of-accepting": {
             "prompt": "On the scale of 1 to 10, how likely is the person to accept the offer?",
             "type": "numeric"
+        },
+        "summary": {
+            "type": "object",
+            "prompt": "Summarize the conversation for the Hiring Manager",
+            "attributes": {
+                "should_we_hire_the_candidate": "Look at the background of the candidate and see if they have worked on Google Cloud and suggest in one word if we should hire them",
+                "attendees": [
+                    {
+                        "name": "Name of the attendee"
+                    }
+                ],
+                "topics": [
+                    {
+                        "topic": "Topics discussed in the interview"
+                    }
+                ]
+            }
         }
     },
     "stand-up": {
-        "explanation": "Everyday meeting discussion what to work on today, what was done yesterday and any blockers",
+        "explanation": "Meeting someone new and talking about their work",
         "blockers": {
             "prompt": "Are there any blockers?",
             "type": "string"

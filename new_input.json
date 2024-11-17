@@ -1,0 +1,67 @@
+{
+  "data": {
+    "participants": {
+      "prompt": "Name all the participants of the meeting",
+      "type": "string",
+      "name": "Meeting Participants",
+      "description": "List of all attendees in the meeting"
+    },
+    "duration": {
+      "prompt": "Estimate the duration of the meeting in minutes",
+      "type": "numeric",
+      "name": "Meeting Duration",
+      "description": "Length of the meeting in minutes"
+    },
+    "sentiments": {
+      "prompt": "what is the sentiment of the meeting? answer in one word",
+      "type": "string",
+      "name": "Meeting Sentiment",
+      "description": "Overall emotional tone of the meeting"
+    },
+    "likely-hood-of-accepting": {
+      "prompt": "On the scale of 1 to 10, how likely is the person to accept the offer?",
+      "type": "numeric",
+      "name": "Acceptance Probability",
+      "description": "Likelihood of candidate accepting the job offer"
+    },
+    "summary": {
+      "prompt": "Summarize the conversation for the Hiring Manager",
+      "type": "object",
+      "name": "Interview Summary",
+      "description": "Detailed summary of the interview discussion",
+      "attributes": {
+        "should_we_hire": "Look at the background of the candidate and see if they have worked on Google Cloud and suggest in one word if we should hire them",
+        "attendees": ["Name of the attendee"],
+        "topics": ["Topics discussed in the interview"]
+      }
+    },
+    "blockers": {
+      "prompt": "Are there any blockers?",
+      "type": "string",
+      "name": "Blockers",
+      "description": "Issues preventing progress in the standup"
+    }
+  },
+  "workflow": {
+    "main": {
+      "name": "Entry Point",
+      "prompt": "Analyze the meeting and suggest what category it falls under",
+      "description": "Initial analysis to determine meeting type",
+      "data": ["participants", "duration"]
+    },
+    "interview-meeting": {
+      "name": "Interview Meeting",
+      "explain": "Meeting someone new and talking about their work",
+      "description": "Workflow for handling job interviews",
+      "requires": ["main"],
+      "data": ["sentiments", "likely-hood-of-accepting", "summary"]
+    },
+    "stand-up": {
+      "name": "Daily Standup",
+      "explain": "Everyday meeting discussion what to work on today, what was done yesterday and any blockers",
+      "description": "Workflow for daily team standups",
+      "requires": ["main"],
+      "data": ["blockers"]
+    }
+  }
+}

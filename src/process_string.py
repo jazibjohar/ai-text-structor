@@ -44,7 +44,7 @@ def build_output_expectations(engine_object):
         key_explanation_text += (
             f"Key: {intent} Explanation: {engine_object[intent].get('explanation')}\n"
         )
-
+        
     key_explanation_text += "Only return one key value in the result from the keys mentioned above if the content matches the explanation for the key. No explanation is needed"
     return key_explanation_text
 
