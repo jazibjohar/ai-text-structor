@@ -41,6 +41,6 @@ def process_request(request):
 
     except (ValueError, KeyError) as e:  # For JSON parsing and dict access errors
         return jsonify({"error": str(e)}), 400
-    except Exception as e:  # Keep as fallback, but log unexpected errors
-        print(f"Unexpected error: {str(e)}")  # Add logging
-        return jsonify({"error": "Internal server error"}), 500
+    except (RuntimeError, TypeError) as e:  # Handle specific operational errors
+        print(f"Operation error: {str(e)}")
+        return jsonify({"error": "Operation failed"}), 500
