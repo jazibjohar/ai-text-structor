@@ -8,3 +8,5 @@ src/requirements.txt
 .DS_Store
 .terraform
 .terraform.lock.hcl
+
+.vscode/PythonImportHelper-v2-Completion.json

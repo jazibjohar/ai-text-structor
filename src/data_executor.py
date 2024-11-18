@@ -1,6 +1,7 @@
 from process_object import run_completion_for_object
 from process_string import run_completion_for_string
 from process_numeric import run_completion_for_numeric
+from process_list import run_completion_for_list
 
 class DataExecutor:
     """
@@ -52,6 +53,10 @@ class DataExecutor:
             elif data_type == 'numeric':
                 self.executors[key] = lambda content, c=config, m=self.model: self._execute_chain(
                     run_completion_for_numeric(content, c), m
+                )
+            elif data_type == 'list':
+                self.executors[key] = lambda content, c=config, m=self.model: self._execute_chain(
+                    run_completion_for_list(content, c), m
                 )
             else:
                 raise ValueError(f"Invalid type '{data_type}' for key '{key}'")

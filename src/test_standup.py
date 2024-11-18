@@ -87,12 +87,7 @@ WORD_COUNT = 1000
 
 
 file_paths = [
-    # 'example_1.json',
-    # 'example_2.json',
-    # 'example_3.json',
-    # 'example_4.json',
-    #'example_5.json',
-    'new_input.json',
+    'local_engine.json.json',
 ]
 for file_path in file_paths:
     sample_request = Request({
