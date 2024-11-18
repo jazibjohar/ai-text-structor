@@ -2,7 +2,7 @@
   "data": {
     "participants": {
       "prompt": "Name all the participants of the meeting",
-      "type": "string",
+      "type": "list",
       "name": "Meeting Participants",
       "description": "List of all attendees in the meeting"
     },

@@ -33,7 +33,7 @@ class AIEngine:
         self._cache_lock = asyncio.Lock()
         
         if 'workflow' in engine_config and engine_config['workflow']:
-            self.workflow_executor = WorkflowExecutor(engine_config['workflow'])
+            self.workflow_executor = WorkflowExecutor(engine_config['workflow'], model)
     
     async def execute_data(self, content: str, data_ids: Union[str, List[str]] = None):
         """
@@ -80,10 +80,13 @@ class AIEngine:
             data_requirements = self.workflow_executor.get_data_requirements(workflow_id)
             results[workflow_id] = await self.execute_data(content, data_requirements)
             
-            # Process dependencies
-            for dep_workflow in self.workflow_executor.get_explain_dependencies(workflow_id):
-                dep_requirements = self.workflow_executor.get_data_requirements(dep_workflow)
-                results[dep_workflow] = await self.execute_data(content, dep_requirements)
+            workflow_executor = self.workflow_executor.get_workflow_executor_by_id(workflow_id)
+            explain_workflow_id = workflow_executor(content)
+            if not explain_workflow_id:
+                continue
+            
+            explain_data_requirements = self.workflow_executor.get_data_requirements(explain_workflow_id)
+            results[workflow_id][explain_workflow_id] = await self.execute_data(content, explain_data_requirements)
         
         return results
 

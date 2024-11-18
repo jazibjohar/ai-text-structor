@@ -23,7 +23,7 @@ def build_pydantic_model(attributes):
 
 
 def run_completion_for_object(content, engine_object, parent=None):
-    invocation_prompt = engine_object.get("invocation_prompt")
+    invocation_prompt = engine_object.get("prompt")
     attributes = engine_object.get("attributes")
     DynamicModel = build_pydantic_model(attributes)
     parser = JsonOutputParser(pydantic_object=DynamicModel)

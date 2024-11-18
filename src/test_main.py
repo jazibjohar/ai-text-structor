@@ -88,7 +88,7 @@ file_paths = [
     # 'example_3.json',
     # 'example_4.json',
     #'example_5.json',
-    'new_input_data_only.json',
+    'new_input.json',
 ]
 for file_path in file_paths:
     sample_request = Request({

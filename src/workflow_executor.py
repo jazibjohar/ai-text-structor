@@ -1,21 +1,26 @@
+from process_workflow import process_workflow
 class WorkflowExecutor:
     """
     Manages the execution and validation of workflows based on their dependencies
     """
-    def __init__(self, workflow_dict=None):
+    def __init__(self, workflow_dict=None, model=None):
         """
-        Initialize WorkflowExecutor with a workflow dictionary
+        Initialize WorkflowExecutor with a workflow dictionary and model
         
         Args:
             workflow_dict (dict): Dictionary containing workflow definitions
+            model: The language model to use for execution
             
         Raises:
-            ValueError: If workflow_dict is None or empty
+            ValueError: If workflow_dict is None or empty or if model is None
         """
         if not workflow_dict:
             raise ValueError("workflow_dict must be provided and cannot be empty")
+        if not model:
+            raise ValueError("model must be provided")
             
         self.workflow_dict = workflow_dict
+        self.model = model
         self.prompt_workflows = {}  # Prompt-based workflows (independent execution steps)
         self.explain_workflows = {}  # Explanation-based workflows (dependent steps)
         self.explain_dependencies = {}  # Mapping of prompt workflows to their explain dependencies
@@ -140,3 +145,40 @@ class WorkflowExecutor:
             list: List of required data field IDs
         """
         return self.workflow_data.get(workflow_id, [])
+    
+    def get_workflow_executor_by_id(self, workflow_id: str):
+        """
+        Returns a function that executes a specific workflow with pre-configured parameters
+        
+        Args:
+            workflow_id (str): ID of the workflow to execute
+            
+        Returns:
+            callable: Function that accepts content and returns the selected workflow path
+            
+        Raises:
+            ValueError: If workflow_id is not found or is not a prompt-based workflow
+        """
+        if workflow_id not in self.prompt_workflows:
+            raise ValueError(f"Workflow '{workflow_id}' not found or is not a prompt-based workflow")
+        
+        # Get the prompt workflow configuration
+        workflow_config = self.prompt_workflows[workflow_id]
+        
+        # Create a dictionary of explain dependencies for this workflow
+        explain_paths = {
+            explain_id: self.explain_workflows[explain_id]['explain']
+            for explain_id in self.explain_dependencies[workflow_id]
+        }
+        
+        # Return a function that only needs content as an argument
+        def executor(content: str) -> str:
+            return process_workflow(
+                model=self.model,
+                content=content,
+                workflow_prompt=workflow_config['prompt'],
+                workflow_paths=explain_paths,
+                context_data={}  # You might want to add context data handling here
+            )
+        
+        return executor
