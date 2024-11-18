@@ -1,21 +1,15 @@
-from prompt_engine import prompt_builder_by_type
-from process_intent import get_builder_for_intent
+from ai_engine import AIEngine
+import asyncio
 
 
 def run_completion(model, content, engine_object):
-    prompt_type = engine_object.get("type")
-    if prompt_type is None:
-        return get_builder_for_intent(model, content, engine_object)
+    engine = AIEngine(engine_object, model)
     
-    if prompt_type not in prompt_builder_by_type:
-        raise ValueError(f"Prompt builder {type} invalid")
-
-    get_prompt = prompt_builder_by_type[prompt_type]
-    builder = get_prompt(content, engine_object)
-    prompts = builder.get("prompts")
-    args = builder.get("args")
-    parser = builder.get("parser")
-    if prompts is None or parser is None:
-        raise ValueError("Invalid prompts or parser")
-    chain =  prompts | model | parser
-    return chain.invoke(args)
+    async def execute_with_timing():
+        start_time = asyncio.get_event_loop().time()
+        result = await engine.execute(content)
+        end_time = asyncio.get_event_loop().time()
+        print(f"Execution time: {end_time - start_time:.2f} seconds")
+        return result
+    
+    return asyncio.run(execute_with_timing())
