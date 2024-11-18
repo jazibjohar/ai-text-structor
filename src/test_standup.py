@@ -1,13 +1,6 @@
 from main import process
-from pprint import pprint
 import json
 
-class Request:
-    def __init__(self, json):
-        self.json = json
-    def get_json(self):
-        return self.json
-    
     
 CONTENT = """
 Emma (Product Manager):
@@ -83,17 +76,14 @@ All:
 Thanks, Emma!
 """
 
-WORD_COUNT = 1000
 
 
-file_paths = [
-    'local_engine.json.json',
-]
-for file_path in file_paths:
-    sample_request = Request({
-        'model': 'gemini-1.5-pro',
-        'content': CONTENT,
-        'word_count': WORD_COUNT,
-        "file_path": file_path
-    })
-    print(json.dumps(process(sample_request), indent=2))
+model = "gemini-1.5-pro"
+
+
+def test_process_request():
+    response = process(model, CONTENT)
+    print(json.dumps(response, indent=2))
+
+
+test_process_request()

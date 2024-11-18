@@ -1,24 +1,46 @@
-
+import functions_framework
+from flask import jsonify
 from models import get_open_ai_model, get_google_generative_ai_model, get_mistral
 from engine_config import load_json
 from completion import run_completion
+from pydantic import BaseModel
 
 models = {
-    'gpt-4o': get_open_ai_model(),
-    'gemini-1.5-pro': get_google_generative_ai_model(),
-    'mistral-7b': get_mistral()
+    "gpt-4": get_open_ai_model(),
+    "gemini-1.5-pro": get_google_generative_ai_model(),
+    "mistral-7b": get_mistral(),
 }
-def process(request):
-    request_json = request.get_json()
-    model = request_json.get('model')
-    if model not in models:
-        return {"error": "Invalid model"}, 400
-    content = request_json.get('content')
-    file_path = request_json.get('file_path')
-    
-    prompt_config = load_json(file_path)
-    return run_completion(
-        models[model],
-        content,
-        prompt_config
-    )
+
+
+class ProcessRequest(BaseModel):
+    model: str
+    content: str
+
+
+engine_config = load_json("engine.json")
+
+
+def process(model, content):
+    return run_completion(models[model], content, engine_config)
+
+
+@functions_framework.http
+def process_request(request):
+    try:
+        request_json = request.get_json()
+        req = ProcessRequest(**request_json)
+
+        if not req.model:
+            req.model = "gemini-1.5-pro"
+        elif req.model not in models:
+            return jsonify({"error": "Invalid model"}), 400
+
+        result = process(req.model, req.content)
+
+        return jsonify(result), 200
+
+    except (ValueError, KeyError) as e:  # For JSON parsing and dict access errors
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:  # Keep as fallback, but log unexpected errors
+        print(f"Unexpected error: {str(e)}")  # Add logging
+        return jsonify({"error": "Internal server error"}), 500
