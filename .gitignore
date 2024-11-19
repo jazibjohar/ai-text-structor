@@ -38,3 +38,4 @@ ENV/
 .idea/
 .vscode/
 *.swp
+.devbox
