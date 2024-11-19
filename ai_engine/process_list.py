@@ -2,7 +2,6 @@ from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel
 from typing import List
-from key_helper import get_content_and_invocation_key
 
 
 class ListModel(BaseModel):
@@ -15,11 +14,12 @@ The output should be a JSON object with a single key 'items' containing an array
 Formatting Instructions: {format_instructions}"""
 
 
-def run_completion_for_list(content, engine_object, parent=None):
+def run_completion_for_list(content, engine_object):
     prompt = engine_object.get("prompt")
     parser = JsonOutputParser(pydantic_object=ListModel)
-    
-    content_key, prompt_key = get_content_and_invocation_key(parent)
+
+    content_key = 'content'
+    prompt_key = 'invocation_prompt'
 
     prompts = ChatPromptTemplate.from_messages(
         [

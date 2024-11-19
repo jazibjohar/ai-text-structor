@@ -6,7 +6,6 @@ from typing import Annotated
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
-from key_helper import get_content_and_invocation_key
 
 extraction_prompt = """Be sure to return a valid json NOT encapsulated in markdown.  Never use the invalid escape sequence \'
 
@@ -22,14 +21,15 @@ def build_pydantic_model(attributes):
     return DynamicModel
 
 
-def run_completion_for_object(content, engine_object, parent=None):
+def run_completion_for_object(content, engine_object):
     invocation_prompt = engine_object.get("prompt")
     attributes = engine_object.get("attributes")
     DynamicModel = build_pydantic_model(attributes)
     parser = JsonOutputParser(pydantic_object=DynamicModel)
 
-    content_key, prompt_key = get_content_and_invocation_key(parent)
-    
+    content_key = 'content'
+    prompt_key = 'invocation_prompt'
+
     extraction_prompt.format(format_instructions=parser.get_format_instructions())
 
     prompts = ChatPromptTemplate.from_messages(

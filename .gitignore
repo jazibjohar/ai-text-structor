@@ -1,12 +1,40 @@
 .venv
-__pycache__
-
 .envrc.local
-basic-summary-engine.zip
-src/requirements.txt
 
 .DS_Store
 .terraform
 .terraform.lock.hcl
 
 .vscode/PythonImportHelper-v2-Completion.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp

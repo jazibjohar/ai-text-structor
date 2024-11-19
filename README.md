@@ -85,6 +85,23 @@ devbox install
 devbox shell
 ```
 
+7. Install Poetry:
+```bash
+curl -sSL https://install.python-poetry.org | python3 -
+```
+Or through devbox (devbox should already install it)
+```bash
+devbox add poetry
+```
+
+8. Install project dependencies through Poetry:
+```
+poetry install
+```
+
+
+
+
 ### Running the Project
 1. Start the server:
 ```bash
