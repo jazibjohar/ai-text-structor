@@ -31,8 +31,12 @@
       "description": "Detailed summary of the interview discussion",
       "attributes": {
         "should_we_hire": "Look at the background of the candidate and see if they have worked on Google Cloud and suggest in one word if we should hire them",
-        "attendees": ["Name of the attendee"],
-        "topics": ["Topics discussed in the interview"]
+        "attendees": [
+          "Name of the attendee"
+        ],
+        "topics": [
+          "Topics discussed in the interview"
+        ]
       }
     },
     "blockers": {
@@ -40,6 +44,12 @@
       "type": "list",
       "name": "Blockers",
       "description": "Issues preventing progress in the standup"
+    },
+    "reason": {
+      "prompt": "Analyze the content and list all the reason ",
+      "type": "list",
+      "name": "Project Closure Reason",
+      "description": "Project Closure Reason"
     }
   },
   "workflow": {
@@ -47,21 +57,45 @@
       "name": "Entry Point",
       "prompt": "Analyze the meeting and suggest what category it falls under",
       "description": "Initial analysis to determine meeting type",
-      "data": ["participants", "duration"]
+      "data": [
+        "participants",
+        "duration"
+      ]
     },
     "interview-meeting": {
       "name": "Interview Meeting",
       "explain": "Meeting someone new and talking about their work",
       "description": "Workflow for handling job interviews",
-      "requires": ["main"],
-      "data": ["sentiments", "likely-hood-of-accepting", "summary"]
+      "requires": [
+        "main"
+      ],
+      "data": [
+        "sentiments",
+        "likely-hood-of-accepting",
+        "summary"
+      ]
     },
     "stand-up": {
       "name": "Daily Standup",
       "explain": "Everyday meeting discussion what to work on today, what was done yesterday and any blockers",
       "description": "Workflow for daily team standups",
-      "requires": ["main"],
-      "data": ["blockers"]
+      "requires": [
+        "main"
+      ],
+      "data": [
+        "blockers"
+      ]
+    },
+    "project_clousre": {
+      "name": "Project Closure",
+      "description": "Project Closure",
+      "explain": "The conversation is about project closure",
+      "requires": [
+        "main"
+      ],
+      "data": [
+        "reason"
+      ]
     }
   }
 }
