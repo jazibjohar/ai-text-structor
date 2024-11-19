@@ -141,7 +141,7 @@ devbox add poetry
 poetry install
 ```
 
-### Publishing to PyPI
+### Publishing to PyPI (Work in progress)
 
 The project uses GitHub Actions for automated publishing to PyPI. The workflow is triggered when you push a version tag.
 
