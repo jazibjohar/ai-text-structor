@@ -34,6 +34,50 @@ The implementation provides several sophisticated features:
    - Robust error handling
    - Extensible architecture
 
+## Usage Example
+
+Here's how to use the AI Engine:
+
+```python
+from ai_engine import AIEngine
+from langchain_openai import ChatOpenAI
+
+# Initialize model
+model = ChatOpenAI(
+    openai_api_key="your-key",
+    model_name="gpt-4o"
+)
+
+# Configure engine
+config = {
+    "data": {
+        "summary": {
+            "type": "string",
+            "prompt": "Summarize the content"
+        }
+    },
+    "workflow": {
+        "analyze": {
+            "prompt": "Analyze the content",
+            "data": ["summary"]
+        }
+    }
+}
+
+# Initialize engine
+engine = AIEngine(config, model)
+
+# Execute
+async def run():
+    result = await engine.execute("Your content here")
+    print(result)
+
+# Run with asyncio
+import asyncio
+asyncio.run(run())
+```
+
+
 ## Project Setup
 
 ### Prerequisites
@@ -61,8 +105,6 @@ cd ai-engine
 2. Create `.envrc` file:
 ```bash
 export OPENAI_API_KEY="your-key-here"
-export GOOGLE_AI_API_KEY="your-key-here"
-export MISTRAL_AI_API_KEY="your-key-here"
 ```
 
 3. Allow direnv:
@@ -95,12 +137,49 @@ devbox add poetry
 ```
 
 8. Install project dependencies through Poetry:
-```
+```bash
 poetry install
 ```
 
+### Publishing to PyPI
 
+The project uses GitHub Actions for automated publishing to PyPI. The workflow is triggered when you push a version tag.
 
+1. Configure GitHub repository:
+   - Go to repository Settings → Secrets and variables → Actions
+   - Add a new secret named `PYPI_TOKEN` with your PyPI API token
+
+2. Update the version in pyproject.toml:
+```bash
+poetry version patch  # For patch version bump
+# or
+poetry version minor  # For minor version bump
+# or
+poetry version major  # For major version bump
+```
+
+3. Commit your changes:
+```bash
+git add pyproject.toml
+git commit -m "Bump version to x.y.z"
+```
+
+4. Create and push a version tag:
+```bash
+git tag vx.y.z  # Replace with your version (e.g., v1.0.0)
+git push origin vx.y.z
+```
+
+The GitHub Action will automatically:
+- Build the package
+- Publish to PyPI
+- Create a release on GitHub
+
+Note: To publish to Test PyPI first, you can manually run:
+```bash
+poetry config repositories.testpypi https://test.pypi.org/legacy/
+poetry publish -r testpypi
+```
 
 ### Running the Project
 1. Start the server:
@@ -118,6 +197,8 @@ curl -X POST http://localhost:8000/process \
     "file_path": "path/to/config.json"
   }'
 ```
+
+
 
 The project uses modern development tools (devbox and direnv) to ensure consistent development environments and secure credential management. The implementation supports parallel processing, caching, and multiple LLM providers while maintaining a clean, extensible architecture.
 

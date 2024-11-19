@@ -1,9 +1,7 @@
-Here's a comprehensive documentation update for the AI Engine:
-
 # AI Engine Documentation
 
 ## Overview
-The AI Engine is a flexible system for executing structured data collection and workflow processing using Large Language Models (LLMs). It processes JSON-based configurations to orchestrate complex data extraction and decision-making workflows.
+The AI Engine is an asynchronous system for executing structured data collection and workflow processing using Large Language Models (LLMs). It processes JSON-based configurations to orchestrate complex data extraction and decision-making workflows.
 
 ## Core Components
 
@@ -28,14 +26,14 @@ The `data` object defines collectable fields and their extraction parameters. Ea
 1. **string**
    - Text-based responses
    - Uses `StrOutputParser` for extraction
-   - Reference implementation: 
+   - Reference implementation in:
 
-```9:27:src/process_string.py
-def run_completion_for_string(content, engine_object, parent=None):
+```5:23:ai_engine/process_string.py
+def run_completion_for_string(content, engine_object):
     prompt = engine_object.get("prompt")
 
-    content_key, prompt_key = get_content_and_invocation_key(parent)
-
+    content_key = 'content'
+    prompt_key = 'invocation_prompt'
     prompts = ChatPromptTemplate.from_messages(
         [
             ("user", "{" + content_key + "}"),
@@ -56,12 +54,13 @@ def run_completion_for_string(content, engine_object, parent=None):
 2. **numeric**
    - Numerical values (integers or floats)
    - Automatically converts responses to float
-   - Reference implementation:
+   - Reference implementation in:
 
-```13:32:src/process_numeric.py
-def run_completion_for_numeric(content, engine_object, parent=None):
+```12:32:ai_engine/process_numeric.py
+def run_completion_for_numeric(content, engine_object):
     prompt = engine_object.get("prompt")
-    content_key, prompt_key = get_content_and_invocation_key(parent)
+    prompt_key = 'invocation_prompt'
+    content_key = 'content'
     prompts = ChatPromptTemplate.from_messages(
         [
             ("user", "{" + content_key + "}"),
@@ -86,26 +85,18 @@ def run_completion_for_numeric(content, engine_object, parent=None):
    - Complex nested structures
    - Uses Pydantic models for validation
    - Requires `attributes` definition
-   - Reference implementation:
+   - Reference implementation in:
 
-```16:51:src/process_object.py
-def build_pydantic_model(attributes):
-    obj = from_json(json.dumps(attributes), allow_partial=True)
-    annotated_fields = {}
-    for key, value in obj.items():
-        annotated_fields[key] = Annotated[type(value), Field(description=value)]
-    DynamicModel = create_model("DynamicModel", **annotated_fields)
-    return DynamicModel
-
-
-def run_completion_for_object(content, engine_object, parent=None):
-    invocation_prompt = engine_object.get("invocation_prompt")
+```24:51:ai_engine/process_object.py
+def run_completion_for_object(content, engine_object):
+    invocation_prompt = engine_object.get("prompt")
     attributes = engine_object.get("attributes")
     DynamicModel = build_pydantic_model(attributes)
     parser = JsonOutputParser(pydantic_object=DynamicModel)
 
-    content_key, prompt_key = get_content_and_invocation_key(parent)
-    
+    content_key = 'content'
+    prompt_key = 'invocation_prompt'
+
     extraction_prompt.format(format_instructions=parser.get_format_instructions())
 
     prompts = ChatPromptTemplate.from_messages(
@@ -122,6 +113,39 @@ def run_completion_for_object(content, engine_object, parent=None):
         "args": {
             "format_instructions": parser.get_format_instructions(),
             prompt_key: invocation_prompt,
+            content_key: content,
+        },
+    }
+```
+
+
+4. **list**
+   - Array of string values
+   - Uses JsonOutputParser with ListModel
+   - Reference implementation in:
+
+```17:40:ai_engine/process_list.py
+def run_completion_for_list(content, engine_object):
+    prompt = engine_object.get("prompt")
+    parser = JsonOutputParser(pydantic_object=ListModel)
+
+    content_key = 'content'
+    prompt_key = 'invocation_prompt'
+
+    prompts = ChatPromptTemplate.from_messages(
+        [
+            ("user", "{" + content_key + "}"),
+            ("user", "{" + prompt_key + "}"),
+            ("user", extraction_prompt),
+        ]
+    )
+
+    return {
+        "prompts": prompts,
+        "parser": parser,
+        "args": {
+            "format_instructions": parser.get_format_instructions(),
+            prompt_key: prompt,
             content_key: content,
         },
     }
@@ -162,76 +186,84 @@ Workflows organize the execution flow and dependencies. Each workflow is defined
    - Can only require prompt-based workflows
    - Cannot depend on other explanation-based workflows
 
-## Execution Flow
+## Usage Example
 
-1. **Configuration Loading**
+Here's how to use the AI Engine:
 
-```11:24:src/main.py
-def process(request):
-    request_json = request.get_json()
-    model = request_json.get('model')
-    if model not in models:
-        return {"error": "Invalid model"}, 400
-    content = request_json.get('content')
-    file_path = request_json.get('file_path')
-    
-    prompt_config = load_json(file_path)
-    return run_completion(
-        models[model],
-        content,
-        prompt_config
-    )
-```
+```python
+from ai_engine import AIEngine
+from langchain_openai import ChatOpenAI
 
+# Initialize model
+model = ChatOpenAI(
+    openai_api_key="your-key",
+    model_name="gpt-4"
+)
 
-2. **Workflow Processing**
-   - Identifies workflow type
-   - Validates dependencies
-   - Executes data collection
-   - Reference implementation:
-
-```5:21:src/completion.py
-def run_completion(model, content, engine_object):
-    prompt_type = engine_object.get("type")
-    if prompt_type is None:
-        return get_builder_for_intent(model, content, engine_object)
-    
-    if prompt_type not in prompt_builder_by_type:
-        raise ValueError(f"Prompt builder {type} invalid")
-
-    get_prompt = prompt_builder_by_type[prompt_type]
-    builder = get_prompt(content, engine_object)
-    prompts = builder.get("prompts")
-    args = builder.get("args")
-    parser = builder.get("parser")
-    if prompts is None or parser is None:
-        raise ValueError("Invalid prompts or parser")
-    chain =  prompts | model | parser
-    return chain.invoke(args)
-```
-
-
-3. **Data Collection**
-   - Processes each field based on type
-   - Uses appropriate parser
-   - Handles nested structures
-   - Reference implementation:
-
-```5:9:src/prompt_engine.py
-prompt_builder_by_type = {
-    "object": run_completion_for_object,
-    "string": run_completion_for_string,
-    "numeric": run_completion_for_numeric,
+# Configure engine
+config = {
+    "data": {
+        "summary": {
+            "type": "string",
+            "prompt": "Summarize the content"
+        }
+    },
+    "workflow": {
+        "analyze": {
+            "prompt": "Analyze the content",
+            "data": ["summary"]
+        }
+    }
 }
-```
 
+# Initialize engine
+engine = AIEngine(config, model)
+
+# Execute
+async def run():
+    result = await engine.execute("Your content here")
+    print(result)
+
+# Run with asyncio
+import asyncio
+asyncio.run(run())
+```
 
 ## Design Principles
 
-1. **Modularity**
-   - Each data type has its dedicated processor
-   - Clear separation between workflow and data processing
-   - Extensible type system
+1. **Asynchronous Execution**
+   - Parallel processing of independent tasks
+   - Efficient handling of multiple LLM calls
+   - Reference implementation in:
+
+```44:68:ai_engine/ai_engine.py
+    async def execute_data(self, content: str, data_ids: Union[str, List[str]] = None):
+        """
+        Execute specific data IDs or all available data executors
+
+        Args:
+            content (str): Content to process
+            data_ids (Union[str, List[str]], optional): Specific data ID(s) to execute
+
+        Returns:
+            dict: Results of processing
+        """
+        if isinstance(data_ids, str):
+            data_ids = [data_ids]
+
+        execute_ids = data_ids or list(self.data_executor.executors)
+
+        if self.parallel:
+            tasks = [self._get_or_execute_data(key, content) for key in execute_ids]
+            results_list = await asyncio.gather(*tasks)
+            return dict(zip(execute_ids, results_list))
+        else:
+            results = {}
+            for key in execute_ids:
+                results[key] = await self._get_or_execute_data(key, content)
+            return results
+```
+
 
 2. **Dependency Management**
    - Explicit workflow dependencies
@@ -244,27 +276,25 @@ prompt_builder_by_type = {
    - Clear error messages
 
 4. **Model Flexibility**
-   - Supports multiple LLM providers
+   - Supports multiple LLM providers (OpenAI, Google, Mistral)
    - Consistent interface across models
-   - Reference implementation:
+   - Reference implementation in:
 
-```7:23:src/models.py
+```10:24:tests/helper.py
 def get_open_ai_model():
-    return ChatOpenAI(
-        openai_api_key=os.getenv('OPENAI_API_KEY'),
-        model_name='gpt-4o'
-    )
+    return ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"), model_name="gpt-4o")
+
 
 def get_google_generative_ai_model():
     return ChatGoogleGenerativeAI(
         model="gemini-1.5-pro",
-        google_api_key=os.getenv('GOOGLE_AI_API_KEY'),
+        google_api_key=os.getenv("GOOGLE_AI_API_KEY"),
     )
-    
+
+
 def get_mistral():
     return ChatMistralAI(
-        mistral_api_key=os.getenv('MISTRAL_AI_API_KEY'),
-        model='open-mistral-7b'
+        mistral_api_key=os.getenv("MISTRAL_AI_API_KEY"), model="open-mistral-7b"
     )
 ```
 
@@ -278,45 +308,13 @@ def get_mistral():
 
 2. **Workflows**
    - Cannot have circular dependencies
-   - Explanation-based workflows:
-     - Must have `requires` field
-     - Can only depend on prompt-based workflows
-   - Prompt-based workflows:
-     - `requires` field is optional
-     - Cannot depend on other prompt-based workflows
+   - Explanation-based workflows must have dependencies
+   - Prompt-based workflows cannot depend on other prompt-based workflows
    - Workflow names must be unique
 
 3. **Execution**
+   - Asynchronous processing of independent tasks
    - Sequential processing of dependencies
-   - Parallel execution of independent fields
    - Results are accumulated hierarchically
 
-## Default Behavior
-
-When no workflow is defined:
-1. Direct data collection from `data` object
-2. Sequential processing of fields
-3. No dependency validation
-4. Flat result structure
-
-## Error Cases
-
-1. **Invalid Configuration**
-   - Missing required fields
-   - Invalid type definitions
-   - Circular dependencies
-
-2. **Runtime Errors**
-   - Parser failures
-   - LLM API errors
-   - Invalid response formats
-
-3. **Dependency Errors**
-   - Missing required workflows
-   - Invalid dependency chains:
-     - Prompt workflow requiring another prompt workflow
-     - Explanation workflow depending on non-prompt workflow
-     - Explanation workflow without any dependencies
-   - Missing `requires` field in explanation workflow
-
-This documentation reflects the current implementation while providing a clear structure for future extensions and modifications.
+For a complete example implementation, see tests/test_standup.py which demonstrates processing a standup meeting transcript through the workflow engine. The test shows how the engine handles complex, multi-speaker content while maintaining context and extracting structured information from natural conversations.

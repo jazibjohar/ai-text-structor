@@ -1,5 +1,3 @@
-I'll help update the documentation based on the current implementation. Here's the revised version:
-
 # AI Engine Documentation
 
 ## Overview
