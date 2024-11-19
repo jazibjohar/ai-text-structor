@@ -181,24 +181,6 @@ poetry config repositories.testpypi https://test.pypi.org/legacy/
 poetry publish -r testpypi
 ```
 
-### Running the Project
-1. Start the server:
-```bash
-python src/main.py
-```
-
-2. Make API requests:
-```bash
-curl -X POST http://localhost:8000/process \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "gpt-4",
-    "content": "Your text here",
-    "file_path": "path/to/config.json"
-  }'
-```
-
-
 
 The project uses modern development tools (devbox and direnv) to ensure consistent development environments and secure credential management. The implementation supports parallel processing, caching, and multiple LLM providers while maintaining a clean, extensible architecture.
 
