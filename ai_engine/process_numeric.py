@@ -11,8 +11,8 @@ def parse_output(output: AIMessage):
 
 def run_completion_for_numeric(content, engine_object):
     prompt = engine_object.get("prompt")
-    prompt_key = 'invocation_prompt'
-    content_key = 'content'
+    prompt_key = "invocation_prompt"
+    content_key = "content"
     prompts = ChatPromptTemplate.from_messages(
         [
             ("user", "{" + content_key + "}"),

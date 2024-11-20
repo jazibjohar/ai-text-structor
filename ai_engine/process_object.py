@@ -27,8 +27,8 @@ def run_completion_for_object(content, engine_object):
     DynamicModel = build_pydantic_model(attributes)
     parser = JsonOutputParser(pydantic_object=DynamicModel)
 
-    content_key = 'content'
-    prompt_key = 'invocation_prompt'
+    content_key = "content"
+    prompt_key = "invocation_prompt"
 
     extraction_prompt.format(format_instructions=parser.get_format_instructions())
 
