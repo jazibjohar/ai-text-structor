@@ -69,7 +69,7 @@ class AIEngine:
 
     async def execute(self, content):
         """
-        Execute AI processing based on configuration
+        Execute AI processing based on configuration, running workflows in parallel
 
         Args:
             content (str): Content to process
@@ -80,29 +80,41 @@ class AIEngine:
         if not self.workflow_executor:
             return await self.execute_data(content)
 
-        results = {}
-        for workflow_id in self.workflow_executor.get_root_workflows():
+        async def process_workflow(workflow_id):
+            workflow_results = {}
             # Process data requirements
-            data_requirements = self.workflow_executor.get_data_requirements(
-                workflow_id
-            )
-            results[workflow_id] = await self.execute_data(content, data_requirements)
+            data_requirements = self.workflow_executor.get_data_requirements(workflow_id)
+            workflow_results[workflow_id] = await self.execute_data(content, data_requirements)
 
-            workflow_executor = self.workflow_executor.get_workflow_executor_by_id(
-                workflow_id
-            )
+            workflow_executor = self.workflow_executor.get_workflow_executor_by_id(workflow_id)
             explain_workflow_id = workflow_executor(content)
-            if not explain_workflow_id:
-                continue
+            if explain_workflow_id:
+                explain_data_requirements = self.workflow_executor.get_data_requirements(
+                    explain_workflow_id
+                )
+                workflow_results[workflow_id][explain_workflow_id] = await self.execute_data(
+                    content, explain_data_requirements
+                )
+            return workflow_results
 
-            explain_data_requirements = self.workflow_executor.get_data_requirements(
-                explain_workflow_id
-            )
-            results[workflow_id][explain_workflow_id] = await self.execute_data(
-                content, explain_data_requirements
-            )
-
-        return results
+        if self.parallel:
+            workflow_tasks = [
+                process_workflow(workflow_id)
+                for workflow_id in self.workflow_executor.get_root_workflows()
+            ]
+            workflow_results_list = await asyncio.gather(*workflow_tasks)
+            
+            # Merge all workflow results into a single dictionary
+            results = {}
+            for workflow_result in workflow_results_list:
+                results.update(workflow_result)
+            return results
+        else:
+            results = {}
+            for workflow_id in self.workflow_executor.get_root_workflows():
+                workflow_result = await process_workflow(workflow_id)
+                results.update(workflow_result)
+            return results
 
     async def _get_or_execute_data(self, data_key: str, content: str):
         """
