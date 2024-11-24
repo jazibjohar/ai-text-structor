@@ -30,12 +30,30 @@
       "name": "Interview Summary",
       "description": "Detailed summary of the interview discussion",
       "attributes": {
+        "pros": "Genarate a short paragraph talking about pros/positives of the candidate",
+        "cons": "Generate a short paragraph talking about cons/negatives of the candidate",
         "should_we_hire": "Look at the background of the candidate and see if they have worked on Google Cloud and suggest in one word if we should hire them",
         "attendees": [
           "Name of the attendee"
         ],
         "topics": [
           "Topics discussed in the interview"
+        ]
+      }
+    },
+    "question_answers": {
+      "prompt": "Analyze the content of the meeting and list all the questions and person who asked them and their answered and who answered them",
+      "type": "object",
+      "name": "Question and Answers",
+      "description": "Question and Answers by participants",
+      "attributes": {
+        "q_and_a": [
+          {
+            "who_asked": "Name of person who asked the question",
+            "who_answered": "Name of person who answered the question, or no one answered it",
+            "question": "What was the questions asked?",
+            "answer": "Answer from one of the participants" 
+          }
         ]
       }
     },
@@ -59,7 +77,8 @@
       "description": "Initial analysis to determine meeting type",
       "data": [
         "participants",
-        "duration"
+        "duration",
+        "question_answers"
       ]
     },
     "interview-meeting": {
