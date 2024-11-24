@@ -100,3 +100,16 @@ class DataExecutor:
             callable: The executor function for the specified key
         """
         return self.executors.get(key)
+
+    def get_data_name(self, key):
+        """
+        Get the name of the data field for a specific key
+
+        Args:
+            key (str): Key to fetch name for
+
+        Returns:
+            str: The name of the data field or the key if name is not specified
+        """
+        config = self.data_dict.get(key, {})
+        return config.get("name", key)

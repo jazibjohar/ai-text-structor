@@ -199,3 +199,23 @@ class WorkflowExecutor:
             )
 
         return executor
+
+    def get_workflow_name(self, workflow_id: str) -> str:
+        """
+        Returns the name of a workflow by its ID
+
+        Args:
+            workflow_id (str): ID of the workflow (prompt or explain)
+
+        Returns:
+            str: Name of the workflow
+
+        Raises:
+            ValueError: If workflow_id is not found in either prompt or explain workflows
+        """
+        if workflow_id in self.prompt_workflows:
+            return self.prompt_workflows[workflow_id]["name"]
+        elif workflow_id in self.explain_workflows:
+            return self.explain_workflows[workflow_id]["name"]
+        else:
+            raise ValueError(f"Workflow '{workflow_id}' not found")
