@@ -55,7 +55,10 @@ class AIEngine:
         if isinstance(data_ids, str):
             data_ids = [data_ids]
 
-        execute_ids = data_ids or list(self.data_executor.executors)
+        execute_ids = data_ids if data_ids else (
+            list(self.data_executor.executors) if not self.workflow_executor 
+            else []
+        )
 
         if self.parallel:
             tasks = [self._get_or_execute_data(key, content) for key in execute_ids]
@@ -67,6 +70,7 @@ class AIEngine:
             results = {}
             titles = {}
             for key in execute_ids:
+                print(execute_ids)
                 results[key] = await self._get_or_execute_data(key, content)
                 titles[key] = self.data_executor.get_data_name(key)
             return {'results': results, 'titles': titles}

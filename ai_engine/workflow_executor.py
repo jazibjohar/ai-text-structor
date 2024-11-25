@@ -187,6 +187,11 @@ class WorkflowExecutor:
             explain_id: self.explain_workflows[explain_id]["explain"]
             for explain_id in self.explain_dependencies[workflow_id]
         }
+        
+        # If there are no explain paths, return a function that returns None
+        # This supports prompt workflows that don't have explain dependencies
+        if not explain_paths:
+            return lambda _: None
 
         # Return a function that only needs content as an argument
         def executor(content: str) -> str:

@@ -1,120 +1,277 @@
 {
   "data": {
-    "participants": {
-      "prompt": "Name all the participants of the meeting",
-      "type": "list",
-      "name": "Meeting Participants",
-      "description": "List of all attendees in the meeting"
-    },
-    "duration": {
-      "prompt": "Estimate the duration of the meeting in minutes",
-      "type": "numeric",
-      "name": "Meeting Duration",
-      "description": "Length of the meeting in minutes"
-    },
-    "sentiments": {
-      "prompt": "what is the sentiment of the meeting? answer in one word",
-      "type": "string",
-      "name": "Meeting Sentiment",
-      "description": "Overall emotional tone of the meeting"
-    },
-    "likely-hood-of-accepting": {
-      "prompt": "On the scale of 1 to 10, how likely is the person to accept the offer?",
-      "type": "numeric",
-      "name": "Acceptance Probability",
-      "description": "Likelihood of candidate accepting the job offer"
-    },
-    "summary": {
-      "prompt": "Summarize the conversation for the Hiring Manager",
-      "type": "object",
-      "name": "Interview Summary",
-      "description": "Detailed summary of the interview discussion",
-      "attributes": {
-        "pros": "Genarate a short paragraph talking about pros/positives of the candidate",
-        "cons": "Generate a short paragraph talking about cons/negatives of the candidate",
-        "should_we_hire": "Look at the background of the candidate and see if they have worked on Google Cloud and suggest in one word if we should hire them",
-        "attendees": [
-          "Name of the attendee"
-        ],
-        "topics": [
-          "Topics discussed in the interview"
-        ]
-      }
-    },
-    "question_answers": {
-      "prompt": "Analyze the content of the meeting and list all the questions and person who asked them and their answered and who answered them",
-      "type": "object",
-      "name": "Question and Answers",
-      "description": "Question and Answers by participants",
-      "attributes": {
-        "q_and_a": [
-          {
-            "who_asked": "Name of person who asked the question",
-            "who_answered": "Name of person who answered the question, or no one answered it",
-            "question": "What was the questions asked?",
-            "answer": "Answer from one of the participants" 
+      "participants": {
+          "prompt": "List all meeting participants with their roles",
+          "type": "object",
+          "name": "Meeting Participants",
+          "description": "Detailed list of attendees with roles",
+          "attributes": {
+              "attendees": [
+                  {
+                      "name": "Participant's full name",
+                      "role": "Participant's role in the project",
+                      "department": "Department or team they represent, if nothing is mentioned then label as Unknown"
+                  }
+              ]
           }
-        ]
+      },
+      "meeting_metadata": {
+          "prompt": "Extract key meeting information",
+          "type": "object",
+          "name": "Meeting Details",
+          "description": "Basic meeting information",
+          "attributes": {
+              "duration_minutes": "Duration of meeting in minutes",
+              "meeting_type": "Type of meeting (status, planning, review, etc.)",
+              "scheduled_time": "When was the meeting scheduled for",
+              "actual_start_time": "When did the meeting actually start",
+              "location": "Meeting location or platform used"
+          }
+      },
+      "raci_matrix": {
+          "prompt": "Based on the discussion, identify RACI (Responsible, Accountable, Consulted, Informed) assignments for mentioned tasks and decisions",
+          "type": "object",
+          "name": "RACI Matrix",
+          "description": "RACI mapping for discussed items",
+          "attributes": {
+              "assignments": [
+                  {
+                      "item": "Task or decision point discussed",
+                      "responsible": [
+                          "Names of people who will do the work"
+                      ],
+                      "accountable": "Name of the single person accountable",
+                      "consulted": [
+                          "Names of people to be consulted"
+                      ],
+                      "informed": [
+                          "Names of people to be informed"
+                      ]
+                  }
+              ]
+          }
+      },
+      "action_items": {
+          "prompt": "List all action items discussed in the meeting",
+          "type": "object",
+          "name": "Action Items",
+          "description": "Tracked action items and their owners",
+          "attributes": {
+              "items": [
+                  {
+                      "task": "Description of the action item",
+                      "owner": "Person responsible for completion",
+                      "deadline": "Due date or timeline",
+                      "priority": "Priority level (High/Medium/Low)",
+                      "dependencies": [
+                          "Any dependent tasks or conditions"
+                      ]
+                  }
+              ]
+          }
+      },
+      "risks_issues": {
+          "prompt": "Identify risks and issues discussed",
+          "type": "object",
+          "name": "Risks and Issues",
+          "description": "Track project risks and active issues",
+          "attributes": {
+              "items": [
+                  {
+                      "type": "Risk or Issue",
+                      "description": "Detailed description",
+                      "impact": "High/Medium/Low",
+                      "mitigation": "Mitigation strategy or solution",
+                      "owner": "Person responsible for tracking",
+                      "status": "Open/In Progress/Resolved"
+                  }
+              ]
+          }
+      },
+      "decisions": {
+          "prompt": "List all decisions made during the meeting",
+          "type": "object",
+          "name": "Decision Log",
+          "description": "Track decisions and their context",
+          "attributes": {
+              "items": [
+                  {
+                      "decision": "What was decided",
+                      "context": "Why this decision was made",
+                      "impact": "Impact of this decision",
+                      "decider": "Who made the final decision",
+                      "stakeholders": [
+                          "People affected by this decision"
+                      ]
+                  }
+              ]
+          }
+      },
+      "project_metrics": {
+          "prompt": "Extract any mentioned project metrics or KPIs",
+          "type": "object",
+          "name": "Project Metrics",
+          "description": "Key project performance indicators",
+          "attributes": {
+              "budget": {
+                  "status": "On track/At risk/Over budget",
+                  "variance": "Percentage variance from plan"
+              },
+              "schedule": {
+                  "status": "On track/Delayed/Ahead",
+                  "variance": "Days ahead or behind"
+              },
+              "scope": {
+                  "status": "Stable/Creeping/Reduced",
+                  "changes": [
+                      "List of scope changes discussed"
+                  ]
+              }
+          }
+      },
+      "synthesis_summary": {
+          "prompt": "Create a comprehensive synthesis of the meeting outcomes",
+          "type": "object",
+          "name": "Meeting Synthesis",
+          "description": "Comprehensive synthesis of meeting outcomes and implications",
+          "attributes": {
+              "key_outcomes": [
+                  "Main outcomes or decisions from the meeting"
+              ],
+              "strategic_impact": {
+                  "short_term": "Immediate impact on project/team",
+                  "long_term": "Long-term implications for the project/organization"
+              },
+              "resource_implications": {
+                  "budget_impact": "Impact on project budget",
+                  "staffing_needs": "Changes to staffing requirements",
+                  "timeline_effects": "Effects on project timeline"
+              },
+              "stakeholder_updates": [
+                  {
+                      "stakeholder_group": "Group of stakeholders to be updated",
+                      "key_message": "Primary message for this group",
+                      "priority": "High/Medium/Low"
+                  }
+              ],
+              "dependencies_affected": [
+                  {
+                      "project_area": "Affected area of the project",
+                      "impact_description": "How it's affected",
+                      "mitigation_needed": "Required mitigation steps"
+                  }
+              ]
+          }
+      },
+      "follow_up_items": {
+          "prompt": "List all follow-up items from the meeting",
+          "type": "object",
+          "name": "Follow-up Items",
+          "description": "Items requiring follow-up after the meeting",
+          "attributes": {
+              "items": [
+                  {
+                      "item": "Follow-up item description",
+                      "assigned_to": "Person responsible for follow-up",
+                      "target_date": "Target completion date",
+                      "dependencies": [
+                          "Any dependent actions"
+                      ]
+                  }
+              ]
+          }
+      },
+      "communication_plan": {
+          "prompt": "Create a communication plan based on meeting outcomes",
+          "type": "object",
+          "name": "Communication Plan",
+          "description": "Plan for communicating meeting outcomes",
+          "attributes": {
+              "communications": [
+                  {
+                      "audience": "Who needs to be informed",
+                      "message": "What needs to be communicated",
+                      "channel": "How to communicate (email, meeting, etc.)",
+                      "timing": "When to communicate"
+                  }
+              ]
+          }
+      },
+      "next_steps": {
+          "prompt": "List the high-level next steps and key takeaways from the meeting",
+          "type": "list",
+          "name": "Next Steps",
+          "description": "High-level summary of next steps and key actions"
       }
-    },
-    "blockers": {
-      "prompt": "Are there any blockers?",
-      "type": "list",
-      "name": "Blockers",
-      "description": "Issues preventing progress in the standup"
-    },
-    "reason": {
-      "prompt": "Analyze the content and list all the reason ",
-      "type": "list",
-      "name": "Project Closure Reason",
-      "description": "Project Closure Reason"
-    }
   },
   "workflow": {
-    "main": {
-      "name": "Entry Point",
-      "prompt": "Analyze the meeting and suggest what category it falls under",
-      "description": "Initial analysis to determine meeting type",
-      "data": [
-        "participants",
-        "duration",
-        "question_answers"
-      ]
-    },
-    "interview-meeting": {
-      "name": "Interview Meeting",
-      "explain": "Meeting someone new and talking about their work",
-      "description": "Workflow for handling job interviews",
-      "requires": [
-        "main"
-      ],
-      "data": [
-        "sentiments",
-        "likely-hood-of-accepting",
-        "summary"
-      ]
-    },
-    "stand-up": {
-      "name": "Daily Standup",
-      "explain": "Everyday meeting discussion what to work on today, what was done yesterday and any blockers",
-      "description": "Workflow for daily team standups",
-      "requires": [
-        "main"
-      ],
-      "data": [
-        "blockers"
-      ]
-    },
-    "project_clousre": {
-      "name": "Project Closure",
-      "description": "Project Closure",
-      "explain": "The conversation is about project closure",
-      "requires": [
-        "main"
-      ],
-      "data": [
-        "reason"
-      ]
-    }
+      "initial_classification": {
+          "name": "Initial Meeting Classification",
+          "prompt": "Analyze the meeting content and classify the type of meeting (status, decision, planning, or review)",
+          "description": "Initial analysis of meeting type and purpose",
+          "data": [
+              "participants",
+              "meeting_metadata"
+          ]
+      },
+      "basic_extraction": {
+          "name": "Basic Information Extraction",
+          "prompt": "Extract fundamental meeting information and next steps",
+          "description": "Process basic meeting elements",
+          "data": [
+              "follow_up_items",
+              "synthesis_summary",
+              "communication_plan",
+              "next_steps"
+          ]
+      },
+      "status_analysis": {
+          "name": "Status Meeting Analysis",
+          "explain": "This is a project status update meeting - analyze metrics and risks",
+          "description": "Process status meeting specific items",
+          "requires": [
+              "initial_classification"
+          ],
+          "data": [
+              "project_metrics",
+              "risks_issues"
+          ]
+      },
+      "decision_analysis": {
+          "name": "Decision Meeting Analysis",
+          "explain": "This meeting involves key project decisions - analyze decisions and responsibilities",
+          "description": "Process decision-making meeting content",
+          "requires": [
+              "initial_classification"
+          ],
+          "data": [
+              "decisions",
+              "raci_matrix"
+          ]
+      },
+      "planning_analysis": {
+          "name": "Planning Meeting Analysis",
+          "explain": "This is a planning or strategy meeting - analyze plans and assignments",
+          "description": "Process planning meeting specific items",
+          "requires": [
+              "initial_classification"
+          ],
+          "data": [
+              "raci_matrix",
+              "risks_issues"
+          ]
+      },
+      "review_analysis": {
+          "name": "Review Meeting Analysis",
+          "explain": "This is a project review meeting - analyze performance and issues",
+          "description": "Process review meeting specific items",
+          "requires": [
+              "initial_classification"
+          ],
+          "data": [
+              "project_metrics",
+              "risks_issues"
+          ]
+      }
   }
 }
