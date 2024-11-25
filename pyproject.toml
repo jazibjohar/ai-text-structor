@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ai-engine"
-version = "0.1.2"
+version = "0.1.3"
 description = "AI processing workflow and data operations manager"
 authors = ["Syed Muhammad Baligh ur Rehman <smbaligh@live.com>"]
 readme = "README.md"
