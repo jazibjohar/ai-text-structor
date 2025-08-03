@@ -98,8 +98,8 @@ curl -fsSL https://get.jetpack.io/devbox | bash
 ### Project Setup
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-org/ai-engine.git
-cd ai-engine
+git clone https://github.com/jazibjohar/ai-text-structor.git
+cd ai-text-structor
 ```
 
 2. Create `.envrc` file:
@@ -183,32 +183,6 @@ poetry publish -r testpypi
 
 
 The project uses modern development tools (devbox and direnv) to ensure consistent development environments and secure credential management. The implementation supports parallel processing, caching, and multiple LLM providers while maintaining a clean, extensible architecture.
-
-## Future Work
-
-### RAG (Retrieval Augmented Generation) Integration
-The AI Text Structor roadmap includes implementing robust RAG capabilities:
-
-1. **Document Processing**
-   - PDF, markdown, and plain text ingestion
-   - Document chunking and preprocessing
-   - Metadata extraction and indexing
-
-2. **Vector Store Integration**
-   - Support for multiple vector databases (Pinecone, Weaviate, etc.)
-   - Efficient similarity search
-   - Hybrid search capabilities
-
-3. **Context Enhancement**
-   - Dynamic context window management
-   - Relevance scoring and filtering
-   - Context compression techniques
-
-4. **Advanced Features**
-   - Multi-document reasoning
-   - Cross-reference validation
-   - Source attribution and citation
-   - Incremental learning capabilities
 
 These enhancements will enable the AI Text Structor to:
 - Process and understand large document collections
