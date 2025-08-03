@@ -3,7 +3,7 @@ import json
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_mistralai import ChatMistralAI
-from ai_engine.ai_engine import AIEngine
+from ai_engine.ai_engine import AITextStructor
 import asyncio
 
 
@@ -42,7 +42,7 @@ models = {
 engine_config = load_json("engine.json")
 
 def run_completion(model, content, engine_object):
-    engine = AIEngine(engine_object, model)
+    engine = AITextStructor(engine_object, model)
 
     async def execute_with_timing():
         start_time = asyncio.get_event_loop().time()

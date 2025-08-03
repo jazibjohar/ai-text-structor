@@ -15,6 +15,26 @@
               ]
           }
       },
+      "duration": {
+          "prompt": "Extract the duration of the meeting, if not mentioned then return 0, It should always be in minutes",
+          "type": "numeric",
+          "name": "Meeting Duration",
+          "description": "Duration of the meeting in minutes"
+      },
+      "duration_users": {
+            "prompt": "Extract estimated duration of each participants contribution in the meeting, if not mentioned then return 0, It should always be in minutes",
+            "type": "object",
+            "name": "Meeting Duration",
+            "description": "Duration of the meeting in minutes",
+            "attributes": {
+                "speaking_duration": [
+                    {
+                        "name": "Participant's full name",
+                        "duration": "Estimated duration of the participant's contribution in minutes"
+                    }
+                ]
+            }
+      },
       "meeting_metadata": {
           "prompt": "Extract key meeting information",
           "type": "object",
@@ -210,6 +230,7 @@
           "prompt": "Analyze the meeting content and classify the type of meeting (status, decision, planning, or review)",
           "description": "Initial analysis of meeting type and purpose",
           "data": [
+              "duration_users",
               "participants",
               "meeting_metadata"
           ]

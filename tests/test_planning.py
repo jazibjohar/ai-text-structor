@@ -85,7 +85,7 @@ Tom Roberts (COO):
 Thanks, everyone. Let's stay aligned and keep communication open.
 """
 
-model = "gemini-1.5-pro"
+model = "gpt-4"
 
 
 def test_process_request():

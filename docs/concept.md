@@ -1,7 +1,7 @@
-# AI Engine Documentation
+# AI Text Structor Documentation
 
 ## Overview
-The AI Engine is an asynchronous system for executing structured data collection and workflow processing using Large Language Models (LLMs). It processes JSON-based configurations to orchestrate complex data extraction and decision-making workflows.
+The AI Text Structor is an asynchronous system for executing structured data collection and workflow processing using Large Language Models (LLMs). It processes JSON-based configurations to orchestrate complex data extraction and decision-making workflows.
 
 ## Core Components
 
@@ -188,10 +188,10 @@ Workflows organize the execution flow and dependencies. Each workflow is defined
 
 ## Usage Example
 
-Here's how to use the AI Engine:
+Here's how to use the AI Text Structor:
 
 ```python
-from ai_engine import AIEngine
+from ai_engine import AITextStructor
 from langchain_openai import ChatOpenAI
 
 # Initialize model
@@ -217,7 +217,7 @@ config = {
 }
 
 # Initialize engine
-engine = AIEngine(config, model)
+engine = AITextStructor(config, model)
 
 # Execute
 async def run():

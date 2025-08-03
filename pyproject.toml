@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ai-engine"
+name = "ai-text-structor"
 version = "0.1.3"
 description = "AI processing workflow and data operations manager"
 authors = ["Syed Muhammad Baligh ur Rehman <smbaligh@live.com>"]

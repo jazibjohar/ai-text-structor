@@ -1,3 +1,3 @@
-from .ai_engine import AIEngine
+from .ai_engine import AITextStructor
 
-__all__ = ["AIEngine"]
+__all__ = ["AITextStructor"]

@@ -1,7 +1,7 @@
-# AI Engine
+# AI Text Structor
 
 ## Core Concepts
-The AI Engine is a flexible system for structured data collection and workflow processing using LLMs. It processes JSON-based configurations to orchestrate complex data extraction and decision-making workflows.
+The AI Text Structor is a flexible system for structured data collection and workflow processing using LLMs. It processes JSON-based configurations to orchestrate complex data extraction and decision-making workflows.
 
 ### Key Components
 1. **Data Definitions** - Define collectable fields with specific types:
@@ -17,7 +17,7 @@ The AI Engine is a flexible system for structured data collection and workflow p
 ## Implementation Details
 The implementation provides several sophisticated features:
 
-1. **AIEngine Class**
+1. **AITextStructor Class**
    - Central orchestrator
    - Parallel execution support
    - Result caching
@@ -36,10 +36,10 @@ The implementation provides several sophisticated features:
 
 ## Usage Example
 
-Here's how to use the AI Engine:
+Here's how to use the AI Text Structor:
 
 ```python
-from ai_engine import AIEngine
+from ai_engine import AITextStructor
 from langchain_openai import ChatOpenAI
 
 # Initialize model
@@ -65,7 +65,7 @@ config = {
 }
 
 # Initialize engine
-engine = AIEngine(config, model)
+engine = AITextStructor(config, model)
 
 # Execute
 async def run():
@@ -187,7 +187,7 @@ The project uses modern development tools (devbox and direnv) to ensure consiste
 ## Future Work
 
 ### RAG (Retrieval Augmented Generation) Integration
-The AI Engine roadmap includes implementing robust RAG capabilities:
+The AI Text Structor roadmap includes implementing robust RAG capabilities:
 
 1. **Document Processing**
    - PDF, markdown, and plain text ingestion
@@ -210,7 +210,7 @@ The AI Engine roadmap includes implementing robust RAG capabilities:
    - Source attribution and citation
    - Incremental learning capabilities
 
-These enhancements will enable the AI Engine to:
+These enhancements will enable the AI Text Structor to:
 - Process and understand large document collections
 - Provide more accurate and contextual responses
 - Support domain-specific knowledge bases

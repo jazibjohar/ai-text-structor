@@ -4,14 +4,14 @@ import asyncio
 from typing import List, Union
 
 
-class AIEngine:
+class AITextStructor:
     """
     Manages the execution of AI processing workflows and data operations
     """
 
     def __init__(self, engine_config, model, parallel: bool = True):
         """
-        Initialize AIEngine with configuration
+        Initialize AITextStructor with configuration
 
         Args:
             engine_config (dict): Configuration containing data and workflow definitions

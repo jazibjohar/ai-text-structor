@@ -1,4 +1,4 @@
-# AI Engine UI
+# AI Text Structor UI
 
 ## Overview
 
