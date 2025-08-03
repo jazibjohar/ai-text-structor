@@ -1,7 +1,7 @@
 from helper import process
 import json
 
-    
+
 CONTENT = """
 Emma (Product Manager):
 Good morning, everyone! Let’s kick off today’s stand-up. Let’s start with quick updates on progress and any blockers. Keep it concise. Ryan, why don’t you go first?
@@ -75,7 +75,6 @@ Alright, thanks, everyone! Let’s have a productive day.
 All:
 Thanks, Emma!
 """
-
 
 
 model = "gemini-1.5-pro"

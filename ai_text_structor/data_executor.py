@@ -45,28 +45,28 @@ class DataExecutor:
                 raise ValueError(f"Configuration for key '{key}' must specify a type")
 
             if data_type == "object":
-                self.executors[
-                    key
-                ] = lambda content, c=config, m=self.model: self._execute_chain(
-                    run_completion_for_object(content, c), m
+                self.executors[key] = (
+                    lambda content, c=config, m=self.model: self._execute_chain(
+                        run_completion_for_object(content, c), m
+                    )
                 )
             elif data_type == "string":
-                self.executors[
-                    key
-                ] = lambda content, c=config, m=self.model: self._execute_chain(
-                    run_completion_for_string(content, c), m
+                self.executors[key] = (
+                    lambda content, c=config, m=self.model: self._execute_chain(
+                        run_completion_for_string(content, c), m
+                    )
                 )
             elif data_type == "numeric":
-                self.executors[
-                    key
-                ] = lambda content, c=config, m=self.model: self._execute_chain(
-                    run_completion_for_numeric(content, c), m
+                self.executors[key] = (
+                    lambda content, c=config, m=self.model: self._execute_chain(
+                        run_completion_for_numeric(content, c), m
+                    )
                 )
             elif data_type == "list":
-                self.executors[
-                    key
-                ] = lambda content, c=config, m=self.model: self._execute_chain(
-                    run_completion_for_list(content, c), m
+                self.executors[key] = (
+                    lambda content, c=config, m=self.model: self._execute_chain(
+                        run_completion_for_list(content, c), m
+                    )
                 )
             else:
                 raise ValueError(f"Invalid type '{data_type}' for key '{key}'")

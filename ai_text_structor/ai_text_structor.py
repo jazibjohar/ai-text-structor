@@ -55,9 +55,12 @@ class AITextStructor:
         if isinstance(data_ids, str):
             data_ids = [data_ids]
 
-        execute_ids = data_ids if data_ids else (
-            list(self.data_executor.executors) if not self.workflow_executor 
-            else []
+        execute_ids = (
+            data_ids
+            if data_ids
+            else (
+                list(self.data_executor.executors) if not self.workflow_executor else []
+            )
         )
 
         if self.parallel:
@@ -65,7 +68,7 @@ class AITextStructor:
             results_list = await asyncio.gather(*tasks)
             results = dict(zip(execute_ids, results_list))
             titles = {key: self.data_executor.get_data_name(key) for key in execute_ids}
-            return {'results': results, 'titles': titles}
+            return {"results": results, "titles": titles}
         else:
             results = {}
             titles = {}
@@ -73,7 +76,7 @@ class AITextStructor:
                 print(execute_ids)
                 results[key] = await self._get_or_execute_data(key, content)
                 titles[key] = self.data_executor.get_data_name(key)
-            return {'results': results, 'titles': titles}
+            return {"results": results, "titles": titles}
 
     async def execute(self, content):
         """
@@ -91,29 +94,39 @@ class AITextStructor:
         async def process_workflow(workflow_id):
             workflow_results = {}
             workflow_titles = {}
-            
+
             # Process data requirements
-            data_requirements = self.workflow_executor.get_data_requirements(workflow_id)
+            data_requirements = self.workflow_executor.get_data_requirements(
+                workflow_id
+            )
             data_execution = await self.execute_data(content, data_requirements)
-            workflow_results[workflow_id] = data_execution['results']
+            workflow_results[workflow_id] = data_execution["results"]
             workflow_titles[workflow_id] = {
-                'workflow': self.workflow_executor.get_workflow_name(workflow_id),
-                'data': data_execution['titles']
+                "workflow": self.workflow_executor.get_workflow_name(workflow_id),
+                "data": data_execution["titles"],
             }
 
-            workflow_executor = self.workflow_executor.get_workflow_executor_by_id(workflow_id)
+            workflow_executor = self.workflow_executor.get_workflow_executor_by_id(
+                workflow_id
+            )
             explain_workflow_id = workflow_executor(content)
             if explain_workflow_id:
-                explain_data_requirements = self.workflow_executor.get_data_requirements(
-                    explain_workflow_id
+                explain_data_requirements = (
+                    self.workflow_executor.get_data_requirements(explain_workflow_id)
                 )
-                explain_execution = await self.execute_data(content, explain_data_requirements)
-                workflow_results[workflow_id][explain_workflow_id] = explain_execution['results']
+                explain_execution = await self.execute_data(
+                    content, explain_data_requirements
+                )
+                workflow_results[workflow_id][explain_workflow_id] = explain_execution[
+                    "results"
+                ]
                 workflow_titles[workflow_id][explain_workflow_id] = {
-                    'workflow': self.workflow_executor.get_workflow_name(explain_workflow_id),
-                    'data': explain_execution['titles']
+                    "workflow": self.workflow_executor.get_workflow_name(
+                        explain_workflow_id
+                    ),
+                    "data": explain_execution["titles"],
                 }
-            return {'results': workflow_results, 'titles': workflow_titles}
+            return {"results": workflow_results, "titles": workflow_titles}
 
         if self.parallel:
             workflow_tasks = [
@@ -121,22 +134,22 @@ class AITextStructor:
                 for workflow_id in self.workflow_executor.get_root_workflows()
             ]
             workflow_results_list = await asyncio.gather(*workflow_tasks)
-            
+
             # Merge all workflow results into a single dictionary
             results = {}
             titles = {}
             for workflow_result in workflow_results_list:
-                results.update(workflow_result['results'])
-                titles.update(workflow_result['titles'])
-            return {'results': results, 'titles': titles}
+                results.update(workflow_result["results"])
+                titles.update(workflow_result["titles"])
+            return {"results": results, "titles": titles}
         else:
             results = {}
             titles = {}
             for workflow_id in self.workflow_executor.get_root_workflows():
                 workflow_result = await process_workflow(workflow_id)
-                results.update(workflow_result['results'])
-                titles.update(workflow_result['titles'])
-            return {'results': results, 'titles': titles}
+                results.update(workflow_result["results"])
+                titles.update(workflow_result["titles"])
+            return {"results": results, "titles": titles}
 
     async def _get_or_execute_data(self, data_key: str, content: str):
         """

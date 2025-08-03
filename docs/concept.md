@@ -28,7 +28,7 @@ The `data` object defines collectable fields and their extraction parameters. Ea
    - Uses `StrOutputParser` for extraction
    - Reference implementation in:
 
-```5:23:ai_engine/process_string.py
+```5:23:ai_text_structor/process_string.py
 def run_completion_for_string(content, engine_object):
     prompt = engine_object.get("prompt")
 
@@ -56,7 +56,7 @@ def run_completion_for_string(content, engine_object):
    - Automatically converts responses to float
    - Reference implementation in:
 
-```12:32:ai_engine/process_numeric.py
+```12:32:ai_text_structor/process_numeric.py
 def run_completion_for_numeric(content, engine_object):
     prompt = engine_object.get("prompt")
     prompt_key = 'invocation_prompt'
@@ -87,7 +87,7 @@ def run_completion_for_numeric(content, engine_object):
    - Requires `attributes` definition
    - Reference implementation in:
 
-```24:51:ai_engine/process_object.py
+```24:51:ai_text_structor/process_object.py
 def run_completion_for_object(content, engine_object):
     invocation_prompt = engine_object.get("prompt")
     attributes = engine_object.get("attributes")
@@ -124,7 +124,7 @@ def run_completion_for_object(content, engine_object):
    - Uses JsonOutputParser with ListModel
    - Reference implementation in:
 
-```17:40:ai_engine/process_list.py
+```17:40:ai_text_structor/process_list.py
 def run_completion_for_list(content, engine_object):
     prompt = engine_object.get("prompt")
     parser = JsonOutputParser(pydantic_object=ListModel)
@@ -191,7 +191,7 @@ Workflows organize the execution flow and dependencies. Each workflow is defined
 Here's how to use the AI Text Structor:
 
 ```python
-from ai_engine import AITextStructor
+from ai_text_structor import AITextStructor
 from langchain_openai import ChatOpenAI
 
 # Initialize model
@@ -236,7 +236,7 @@ asyncio.run(run())
    - Efficient handling of multiple LLM calls
    - Reference implementation in:
 
-```44:68:ai_engine/ai_engine.py
+```44:68:ai_text_structor/ai_text_structor.py
     async def execute_data(self, content: str, data_ids: Union[str, List[str]] = None):
         """
         Execute specific data IDs or all available data executors

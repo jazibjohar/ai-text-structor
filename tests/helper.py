@@ -3,7 +3,7 @@ import json
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_mistralai import ChatMistralAI
-from ai_engine.ai_engine import AITextStructor
+from ai_text_structor.ai_text_structor import AITextStructor
 import asyncio
 
 
@@ -22,11 +22,10 @@ def get_mistral():
     return ChatMistralAI(
         mistral_api_key=os.getenv("MISTRAL_AI_API_KEY"), model="open-mistral-7b"
     )
-    
 
 
 def load_json(file_path):
-    with open(file_path, encoding='utf-8') as json_data:
+    with open(file_path, encoding="utf-8") as json_data:
         d = json.load(json_data)
         json_data.close()
         return d
@@ -40,6 +39,7 @@ models = {
 
 
 engine_config = load_json("engine.json")
+
 
 def run_completion(model, content, engine_object):
     engine = AITextStructor(engine_object, model)

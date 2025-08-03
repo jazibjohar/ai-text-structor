@@ -1,7 +1,7 @@
 from helper import process
 import json
 
-    
+
 CONTENT = """
 PM (Sarah): Good morning, everyone. Thanks for joining this meeting. Today, we’re officially wrapping up the GreenTech project. I want to first thank all of you for your hard work and dedication. Let’s go over the reasons for closing this project and ensure we document everything properly.
 
@@ -34,7 +34,6 @@ PM (Sarah): Perfect. Then let’s officially close the project. I’ll send out 
 All: Thanks, Sarah!
 
 """
-
 
 
 model = "gemini-1.5-pro"

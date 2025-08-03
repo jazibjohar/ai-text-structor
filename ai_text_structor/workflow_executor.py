@@ -24,13 +24,9 @@ class WorkflowExecutor:
 
         self.workflow_dict = workflow_dict
         self.model = model
-        self.prompt_workflows = (
-            {}
-        )  # Prompt-based workflows (independent execution steps)
+        self.prompt_workflows = {}  # Prompt-based workflows (independent execution steps)
         self.explain_workflows = {}  # Explanation-based workflows (dependent steps)
-        self.explain_dependencies = (
-            {}
-        )  # Mapping of prompt workflows to their explain dependencies
+        self.explain_dependencies = {}  # Mapping of prompt workflows to their explain dependencies
         self.workflow_data = {}  # Mapping of workflows to their data requirements
 
         if self._validate():
@@ -187,7 +183,7 @@ class WorkflowExecutor:
             explain_id: self.explain_workflows[explain_id]["explain"]
             for explain_id in self.explain_dependencies[workflow_id]
         }
-        
+
         # If there are no explain paths, return a function that returns None
         # This supports prompt workflows that don't have explain dependencies
         if not explain_paths:

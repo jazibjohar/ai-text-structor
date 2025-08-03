@@ -39,7 +39,7 @@ The implementation provides several sophisticated features:
 Here's how to use the AI Text Structor:
 
 ```python
-from ai_engine import AITextStructor
+from ai_text_structor import AITextStructor
 from langchain_openai import ChatOpenAI
 
 # Initialize model

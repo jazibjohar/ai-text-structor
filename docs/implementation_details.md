@@ -15,7 +15,7 @@ The central orchestrator that manages:
 
 Reference implementation:
 
-```6:90:src/ai_engine.py
+```6:90:src/ai_text_structor.py
 class AITextStructor:
     """
     Manages the execution of AI processing workflows and data operations
@@ -556,7 +556,7 @@ def process(request):
 ### 2. Parallel Execution
 The engine supports parallel processing of data executors:
 
-```38:62:src/ai_engine.py
+```38:62:src/ai_text_structor.py
     async def execute_data(self, content: str, data_ids: Union[str, List[str]] = None):
         """
         Execute specific data IDs or all available data executors
@@ -588,7 +588,7 @@ The engine supports parallel processing of data executors:
 ### 3. Caching
 Implements result caching for efficiency:
 
-```93:112:src/ai_engine.py
+```93:112:src/ai_text_structor.py
     async def _get_or_execute_data(self, data_key: str, content: str):
         """
         Get data from cache or execute data executor if not cached
